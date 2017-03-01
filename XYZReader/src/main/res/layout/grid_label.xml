@@ -1,0 +1,54 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:orientation="vertical">
+
+<!--suppress AndroidLintContentDescription -->
+<com.quartzo.xyzreader.ui.DynamicHeightImageView
+    android:id="@+id/thumbnail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scaleType="centerCrop"
+    android:transitionName="@string/transition_image"/>
+
+<View
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/photo_background_protection" />
+
+<LinearLayout
+    android:id="@+id/meta_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="bottom"
+    android:gravity="center_vertical"
+    >
+    <TextView
+        android:id="@+id/article_title"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/ltgray"
+        android:ellipsize="end"
+        android:maxLines="2"
+        />
+
+    <TextView
+        android:id="@+id/article_subtitle"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="4dp"
+        android:textColor="@color/ltgray"
+        android:maxLines="1"
+        android:ellipsize="end" />
+</LinearLayout>
+</LinearLayout>

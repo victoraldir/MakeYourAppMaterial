@@ -7,15 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -31,10 +27,12 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.quartzo.xyzreader.MyApp;
 import com.quartzo.xyzreader.R;
 import com.quartzo.xyzreader.data.ArticleLoader;
 import com.quartzo.xyzreader.data.ItemsContract;
 import com.quartzo.xyzreader.data.UpdaterService;
+import com.quartzo.xyzreader.utils.AnimationUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -143,8 +141,11 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         @Override
         public long getItemId(int position) {
-            mCursor.moveToPosition(position);
-            return mCursor.getLong(ArticleLoader.Query._ID);
+            if(mCursor.moveToPosition(position)) {
+                return mCursor.getLong(ArticleLoader.Query._ID);
+            }
+
+            return 0;
         }
 
         @Override
@@ -158,14 +159,11 @@ public class ArticleListActivity extends AppCompatActivity implements
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
-                        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(ArticleListActivity.this, vh.thumbnailView,vh.thumbnailView.getTransitionName()).toBundle();
-
-                        //ImageView image = (ImageView) view.findViewById(R.id.thumbnail);
                         Intent intent = new Intent(ArticleListActivity.this, ArticleDetailActivity.class);
                         intent.setAction(Intent.ACTION_VIEW);
                         intent.setData(ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
 
-                        startActivity(intent,bundle);
+                        startActivity(intent,ActivityOptionsCompat.makeSceneTransitionAnimation(ArticleListActivity.this, vh.thumbnailView,vh.thumbnailView.getTransitionName()).toBundle());
 
                     } else {
                         startActivity(new Intent(Intent.ACTION_VIEW,
@@ -192,28 +190,30 @@ public class ArticleListActivity extends AppCompatActivity implements
 
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
 
-            ImageLoaderHelper.getInstance(holder.thumbnailView.getContext()).getImageLoader()
-                    .get(mCursor.getString(ArticleLoader.Query.THUMB_URL), new ImageLoader.ImageListener() {
-                        @Override
-                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-                            Bitmap bitmap = imageContainer.getBitmap();
-                            if (bitmap != null) {
-                                Palette.Builder builder = new Palette.Builder(bitmap);
-                                Palette p =  builder.generate();
-                                ColorDrawable colorDrawable = new ColorDrawable(ContextCompat.getColor(getApplicationContext(),android.R.color.transparent));
-                                BitmapDrawable bitmapDrawable = new BitmapDrawable(getApplicationContext().getResources(), bitmap);
-                                TransitionDrawable td = new TransitionDrawable(new Drawable[]{colorDrawable,bitmapDrawable});
-                                holder.thumbnailView.setImageDrawable(td);
-                                td.startTransition(300);
-                                holder.metaBar.setBackgroundColor(p.getDarkMutedColor(0xFF333333));
-                            }
+            holder.imageLoader.getImageLoader().get(mCursor.getString(ArticleLoader.Query.THUMB_URL), new ImageLoader.ImageListener() {
+                @Override
+                public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
+                    Bitmap bitmap = imageContainer.getBitmap();
+                    if (bitmap != null) {
+                        Palette.Builder builder = new Palette.Builder(bitmap);
+                        Palette p =  builder.generate();
+
+                        TransitionDrawable td = AnimationUtils.createTransitionDrawble(ArticleListActivity.this,bitmap);
+
+                        holder.thumbnailView.setImageDrawable(td);
+                        td.startTransition(300);
+                        if(!getResources().getBoolean(R.bool.isTablet)){
+                            holder.metaBar.setBackgroundColor(p.getDarkMutedColor(0xFF333333));
                         }
 
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
+                    }
+                }
 
-                        }
-                    });
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+
+                }
+            });
 
         }
 
@@ -228,10 +228,13 @@ public class ArticleListActivity extends AppCompatActivity implements
         @BindView(R.id.article_title) TextView titleView;
         @BindView(R.id.article_subtitle) TextView subtitleView;
         @BindView(R.id.meta_bar) LinearLayout metaBar;
+        ImageLoaderHelper imageLoader;
 
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+            this.imageLoader = ImageLoaderHelper.getInstance(MyApp.sContext);
+
         }
     }
 }

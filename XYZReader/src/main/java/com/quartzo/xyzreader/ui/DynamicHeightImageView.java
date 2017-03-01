@@ -1,10 +1,10 @@
 package com.quartzo.xyzreader.ui;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
-public class DynamicHeightImageView extends ImageView {
+public class DynamicHeightImageView extends AppCompatImageView {
     private float mAspectRatio = 1.5f;
 
     public DynamicHeightImageView(Context context) {

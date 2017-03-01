@@ -1,0 +1,3 @@
+<resources>
+    <dimen name="nested_overlap_top">96dp</dimen>
+</resources>

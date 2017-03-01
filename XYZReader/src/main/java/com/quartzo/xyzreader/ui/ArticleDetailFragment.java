@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -22,7 +24,9 @@ import android.text.Html;
 import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +37,10 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.quartzo.xyzreader.MyApp;
 import com.quartzo.xyzreader.R;
 import com.quartzo.xyzreader.data.ArticleLoader;
+import com.quartzo.xyzreader.utils.AnimationUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +56,9 @@ public class ArticleDetailFragment extends Fragment implements
 
     public static final String ARG_ITEM_ID = "item_id";
 
+
+    private boolean flagIsCard;
+
     private Cursor mCursor;
     private long mItemId;
 
@@ -61,6 +70,11 @@ public class ArticleDetailFragment extends Fragment implements
     Window mWindow;
     @BindView(R.id.photo) ImageView mPhotoView;
     @BindView(R.id.detail_toolbar) Toolbar mToolbar;
+
+    @Nullable
+    @BindView(R.id.card_toolbar)
+    Toolbar mCardToolbar;
+
     @BindView(R.id.share_fab) FloatingActionButton mFab;
     @BindView(R.id.article_title) TextView mTitleView;
     @BindView(R.id.article_byline) TextView mBylineView;
@@ -91,7 +105,15 @@ public class ArticleDetailFragment extends Fragment implements
             mItemId = getArguments().getLong(ARG_ITEM_ID);
         }
 
+        flagIsCard = getResources().getBoolean(R.bool.detail_is_card);
+
         setHasOptionsMenu(true);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Slide slide = new Slide(Gravity.BOTTOM);
+            //getActivity().getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+            getActivity().getWindow().setReenterTransition(slide);
+        }
     }
 
     @Override
@@ -145,6 +167,8 @@ public class ArticleDetailFragment extends Fragment implements
             return;
         }
 
+        final Toolbar toolbarTitle = flagIsCard ? mCardToolbar : mToolbar;
+
         mBylineView.setMovementMethod(new LinkMovementMethod());
         mBodyView.setTypeface(Typeface.createFromAsset(getResources().getAssets(), "Rosario-Regular.ttf"));
 
@@ -166,7 +190,7 @@ public class ArticleDetailFragment extends Fragment implements
             Spanned bodyContent = fromHtml(mCursor.getString(ArticleLoader.Query.BODY));
 
             collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-            mToolbar.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
+            //mToolbar.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
             mBylineView.setText(byLineContent);
             mBodyView.setText(bodyContent);
             ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
@@ -179,17 +203,19 @@ public class ArticleDetailFragment extends Fragment implements
                                 Palette.Builder builder = new Palette.Builder(bitmap);
                                 Palette p =  builder.generate();
                                 mMutedColor = p.getDarkMutedColor(0xFF333333);
-                                mPhotoView.setImageBitmap(imageContainer.getBitmap());
+                                TransitionDrawable td = AnimationUtils.createTransitionDrawble(MyApp.sContext,bitmap);
+                                mPhotoView.setImageDrawable(td);
+                                td.startTransition(300);
 
                                 mTitleByLineLinearLayout.setBackgroundColor(mMutedColor);
-                                mToolbar.setBackgroundColor(mMutedColor);
+                                toolbarTitle.setBackgroundColor(mMutedColor);
                                 collapsingToolbarLayout.setContentScrimColor(mMutedColor);
 
                                 if(Build.VERSION.SDK_INT >= 21 && mWindow != null) {
                                     mWindow.setStatusBarColor(mMutedColor);
                                 }
 
-                                mActivity.supportStartPostponedEnterTransition();
+                                //mActivity.supportStartPostponedEnterTransition();
 //                                mPhotoView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 //                                    @Override
 //                                    public boolean onPreDraw() {
@@ -234,7 +260,12 @@ public class ArticleDetailFragment extends Fragment implements
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(true);
+            if(flagIsCard){
+                actionBar.setDisplayShowTitleEnabled(false);
+            }else{
+                actionBar.setDisplayShowTitleEnabled(true);
+            }
+
 
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override

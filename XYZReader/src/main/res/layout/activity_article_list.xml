@@ -8,7 +8,8 @@
         android:id="@+id/toolbar_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="8dp"
+
+        android:elevation="@dimen/app_bar_elevation"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -20,9 +21,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                android:layout_marginLeft="@dimen/list_toolbar_side_margin"
-                android:layout_marginRight="@dimen/list_toolbar_side_margin"
+                android:layout_height="@dimen/bar_height"
                 android:background="@color/theme_primary">
 
                 <ImageView
@@ -51,6 +50,7 @@
             android:paddingBottom="28dp"
             android:paddingLeft="@dimen/list_side_margin"
             android:paddingRight="@dimen/list_side_margin"
+            android:layout_marginStart="@dimen/side_margin"
             android:scrollbarStyle="outsideOverlay"
             android:clipToPadding="false"
             android:clipChildren="false" />

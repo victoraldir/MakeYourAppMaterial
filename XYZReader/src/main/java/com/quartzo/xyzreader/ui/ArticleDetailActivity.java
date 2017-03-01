@@ -1,12 +1,10 @@
 package com.quartzo.xyzreader.ui;
 
 
-
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -48,7 +46,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         }
         setContentView(R.layout.activity_article_detail);
 
-        supportPostponeEnterTransition();
+        //supportPostponeEnterTransition();
 
         ButterKnife.bind(this);
 
@@ -86,6 +84,11 @@ public class ArticleDetailActivity extends AppCompatActivity
 
             }
         }
+
+
+
+
+
     }
 
     @Override

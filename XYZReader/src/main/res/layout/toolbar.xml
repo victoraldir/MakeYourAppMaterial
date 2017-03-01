@@ -1,0 +1,48 @@
+<android.support.v7.widget.Toolbar
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/detail_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/expanded_toolbar_height"
+    app:layout_collapseMode="pin"
+    android:layout_gravity="bottom"
+    android:minHeight="@dimen/expanded_toolbar_height"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    android:titleTextAppearance="@style/TextAppearance.AppCompat.Medium"
+    tools:background="@color/theme_accent">
+
+    <LinearLayout
+        android:id="@+id/meta_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/expanded_toolbar_height"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="24dp"
+        tools:background="@color/photo_placeholder">
+
+        <TextView
+            android:elevation="4dp"
+            tools:text="Here's a title"
+            android:id="@+id/article_title"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <TextView
+            tools:text="Here's by line"
+            android:id="@+id/article_byline"
+            style="?android:attr/textAppearanceSmall"
+            android:layout_width="wrap_content"
+            android:maxLines="1"
+            android:layout_height="wrap_content"
+            android:textColor="@color/ltgray" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.Toolbar>

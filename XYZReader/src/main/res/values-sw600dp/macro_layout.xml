@@ -6,4 +6,10 @@
     <dimen name="detail_metabar_vert_padding">32dp</dimen>
     <dimen name="detail_metabar_title_bottom_padding">8dp</dimen>
     <dimen name="detail_body_bottom_margin">96dp</dimen>
+    <bool name="detail_is_card">true</bool>
+    <integer name="list_column_count">3</integer>
+
+    <bool name="isTablet">true</bool>
+
+    <dimen name="detail_expanded_title_margin_bottom">70dp</dimen>
 </resources>

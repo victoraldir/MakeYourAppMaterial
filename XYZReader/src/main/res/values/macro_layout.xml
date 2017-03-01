@@ -14,4 +14,9 @@
     <dimen name="detail_metabar_title_bottom_padding">4dp</dimen>
     <dimen name="detail_body_top_margin">24dp</dimen>
     <dimen name="detail_body_bottom_margin">88dp</dimen>
+
+    <bool name="isTablet">false</bool>
+
+    <dimen name="detail_expanded_title_margin_bottom">70dp</dimen>
+
 </resources>
