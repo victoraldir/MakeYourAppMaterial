@@ -76,7 +76,6 @@
         app:useCompatPadding="true"
         android:layout_margin="@dimen/fab_margin"
         app:pressedTranslationZ="@dimen/fab_press_translation_z"
-        android:stateListAnimator="@anim/fab_state_list_anim"
         app:layout_anchorGravity="bottom|right|end"
         android:theme="@style/MyFloatingButton"
         android:contentDescription="@string/action_share"
