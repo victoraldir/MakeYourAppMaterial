@@ -74,7 +74,7 @@
         android:src="@drawable/ic_share"
         app:layout_anchor="@id/app_bar"
         app:useCompatPadding="true"
-        android:layout_margin="@dimen/fab_margin"
+
         app:pressedTranslationZ="@dimen/fab_press_translation_z"
         app:layout_anchorGravity="bottom|right|end"
         android:theme="@style/MyFloatingButton"
